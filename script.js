@@ -5,19 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
   ============================================================ */
   async function loadDynamicEvents() {
     try {
-      // First try localStorage (admin updates)
-      const stored = localStorage.getItem('events');
       let events = [];
-
-      if (stored) {
-        events = JSON.parse(stored);
-      } else {
-        // Fallback to fetch from GitHub admin repo
-        const response = await fetch('https://raw.githubusercontent.com/Cryptovaultiq/My-Ticketmaster-admin/main/events.json');
-        if (response.ok) {
-          const data = await response.json();
-          events = data.events;
-        }
+      
+      // Always fetch from GitHub to get latest events (not cached localStorage)
+      const response = await fetch('https://raw.githubusercontent.com/Cryptovaultiq/My-Ticketmaster-admin/main/events.json');
+      if (response.ok) {
+        const data = await response.json();
+        events = data.events;
       }
 
       // Render events in container
@@ -54,6 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Load events on page load
   loadDynamicEvents();
+  
+  // Auto-refresh events every 15 seconds to show admin updates
+  setInterval(loadDynamicEvents, 15000);
 
   /* ============================================================
      HAMBURGER + MOBILE MENU – NOW WORKING
