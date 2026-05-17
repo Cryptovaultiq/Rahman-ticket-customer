@@ -1,5 +1,28 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  // Global variable to store seller link
+  let sellerLink = 'https://twitter.com/@stavrimetaxa98'; // Default fallback
+
+  /* ============================================================
+     LOAD SELLER CONFIGURATION FROM GITHUB
+  ============================================================ */
+  async function loadSellerConfig() {
+    try {
+      const response = await fetch('https://raw.githubusercontent.com/Cryptovaultiq/My-Ticketmaster-admin/main/seller-config.json');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.sellerLink) {
+          sellerLink = data.sellerLink;
+        }
+      }
+    } catch (error) {
+      console.log('Using default seller link', error);
+    }
+  }
+
+  // Load seller config immediately
+  loadSellerConfig();
+
   /* ============================================================
      DYNAMIC EVENTS LOADER – Load from events.json
   ============================================================ */
@@ -227,8 +250,8 @@ document.addEventListener('DOMContentLoaded', () => {
       msgSellerBtn.style.transform = 'scale(1)';
     });
     msgSellerBtn.addEventListener('click', () => {
-  window.open('https://twitter.com/@stavrimetaxa98', '_blank');
-});
+      window.open(sellerLink, '_blank');
+    });
 
     /* ============================================================
        BLUE BORDER BOX FOR PRICE + QTY + TOTAL
