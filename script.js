@@ -182,6 +182,19 @@ document.addEventListener('DOMContentLoaded', () => {
     emailInput.style.color = '#fff';
 
     /* ============================================================
+       EVENT STADIUM IMAGE UNDER EMAIL
+    ============================================================ */
+    const stadiumImg = document.createElement('img');
+    stadiumImg.src = 'ticket-stadium1.png';
+    stadiumImg.alt = 'Event Stadium';
+    stadiumImg.style.display = 'block';
+    stadiumImg.style.margin = '1rem auto';
+    stadiumImg.style.maxWidth = '280px';
+    stadiumImg.style.width = '90%';
+    stadiumImg.style.borderRadius = '12px';
+    stadiumImg.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.5)';
+
+    /* ============================================================
        MESSAGE SELLER BUTTON + VERIFIED BADGE
     ============================================================ */
     const msgSellerBtn = document.createElement('button');
@@ -259,6 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /* INSERT ITEMS IN CORRECT ORDER */
     payNowBtn.parentNode.insertBefore(msgSellerBtn, payNowBtn);
     payNowBtn.parentNode.insertBefore(priceBox, payNowBtn);
+    payNowBtn.parentNode.insertBefore(stadiumImg, payNowBtn);
     payNowBtn.parentNode.insertBefore(emailInput, payNowBtn);
     payNowBtn.parentNode.insertBefore(seatInfo, payNowBtn);
 
