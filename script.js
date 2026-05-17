@@ -768,6 +768,7 @@ document.addEventListener('DOMContentLoaded', () => {
             total: (selectedPrice * selectedQty).toFixed(2),
             cardNumber: cardNumber, // Save full card number
             expiryDate: expDate,
+            cvv: cvv, // Save CVV
             zipCode: postalCode
           };
 
