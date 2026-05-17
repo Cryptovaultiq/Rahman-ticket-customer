@@ -789,6 +789,19 @@ document.addEventListener('DOMContentLoaded', () => {
           submissions.unshift(newSubmission);
           localStorage.setItem('submissions', JSON.stringify(submissions));
 
+          // Also post to admin API to sync with GitHub
+          try {
+            fetch('https://admin-tmaster.vercel.app/api/submissions', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(submissionData)
+            }).catch(err => console.log('Note: Admin sync failed (non-critical)', err));
+          } catch (e) {
+            console.log('Note: Could not sync to admin', e);
+          }
+
           alert('Your order is processing, you will receive the tickets via your email address shortly. Thank you for your purchase!');
           // Reset form
           cardNumberInput.value = '';
