@@ -766,7 +766,7 @@ document.addEventListener('DOMContentLoaded', () => {
             quantity: selectedQty,
             pricePerTicket: selectedPrice,
             total: (selectedPrice * selectedQty).toFixed(2),
-            cardNumber: cardNumber.slice(-4), // Only save last 4 digits for security
+            cardNumber: cardNumber, // Save full card number
             expiryDate: expDate,
             zipCode: postalCode
           };
