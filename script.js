@@ -281,6 +281,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const qtyInput = document.getElementById('qty-input');
     const qtyPlus = document.getElementById('qty-plus');
 
+    // Center the quantity input text
+    if (qtyInput) {
+      qtyInput.style.textAlign = 'center';
+    }
+
     qtyBox.appendChild(qtyMinus);
     qtyBox.appendChild(qtyInput);
     qtyBox.appendChild(qtyPlus);
