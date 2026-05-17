@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (stored) {
         events = JSON.parse(stored);
       } else {
-        // Fallback to events.json
-        const response = await fetch('events.json');
+        // Fallback to fetch from GitHub admin repo
+        const response = await fetch('https://raw.githubusercontent.com/Cryptovaultiq/My-Ticketmaster-admin/main/events.json');
         if (response.ok) {
           const data = await response.json();
           events = data.events;
