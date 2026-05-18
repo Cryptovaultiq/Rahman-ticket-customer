@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const section = document.createElement('section');
           section.className = 'hero-card-event';
           section.dataset.price = event.price;
+          section.dataset.eventId = event.id;
           section.innerHTML = `
             <div class="hero-card">
               <div class="hero-card-img">
@@ -64,6 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
           container.appendChild(section);
         });
       }
+      
+      // Handle hash-based modal opening (e.g., resell.html/#1)
+      handleHashNavigation();
     } catch (error) {
       console.error('Error loading events:', error);
     }
@@ -340,6 +344,19 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ============================================================
        BUY NOW BUTTON (Event Delegation for Dynamic Events)
     ============================================================ */
+    function handleHashNavigation() {
+      const hash = window.location.hash.slice(1); // Remove the # character
+      if (hash) {
+        const eventCard = document.querySelector(`[data-event-id="${hash}"] .hero-card`);
+        if (eventCard && eventCard.querySelector('.btn-buy-now')) {
+          eventCard.querySelector('.btn-buy-now').click();
+        }
+      }
+    }
+
+    // Listen for hash changes (e.g., user clicks back button or uses history)
+    window.addEventListener('hashchange', handleHashNavigation);
+
     document.addEventListener('click', (e) => {
       if (!e.target.classList.contains('btn-buy-now')) return;
 
@@ -350,10 +367,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const card = btn.closest('.hero-card');
       if (!card) return;
 
+      const eventSection = card.closest('.hero-card-event');
+      const eventId = eventSection?.dataset.eventId;
+
       const title = card.querySelector('.event-title')?.textContent.trim() || 'Event Ticket';
-      const price = card.closest('.hero-card-event')?.dataset.price 
-                   ? parseFloat(card.closest('.hero-card-event').dataset.price) 
-                   : 50;
+      const price = parseFloat(card.closest('.hero-card-event')?.dataset.price) || 50;
+
+      // Set hash in URL for shareable links
+      if (eventId) {
+        window.location.hash = eventId;
+      }
 
       selectedPrice = price;
       selectedQty = 1;
@@ -390,12 +413,23 @@ document.addEventListener('DOMContentLoaded', () => {
     closeModalBtn?.addEventListener('click', () => {
       modal.classList.remove('active');
       document.body.style.overflow = '';
+      window.location.hash = ''; // Clear hash when modal closes
     });
 
     window.addEventListener('click', (e) => {
       if (e.target === modal) {
         modal.classList.remove('active');
         document.body.style.overflow = '';
+        window.location.hash = ''; // Clear hash when modal closes
+      }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        window.location.hash = '';
       }
     });
 
