@@ -27,6 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
      DYNAMIC EVENTS LOADER – Load from events.json
   ============================================================ */
   async function loadDynamicEvents() {
+    // Skip refresh if modal is open
+    const modal = document.getElementById('ticket-modal');
+    if (modal && modal.classList.contains('active')) {
+      return;
+    }
+
     try {
       let events = [];
       
