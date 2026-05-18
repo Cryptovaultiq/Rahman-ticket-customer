@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
   ============================================================ */
   async function loadSellerConfig() {
     try {
-      const response = await fetch('https://raw.githubusercontent.com/Cryptovaultiq/Rahman-ticket-admin/main/seller-config.json');
+      // Add cache-busting parameter to force fresh data
+      const response = await fetch(`https://raw.githubusercontent.com/Cryptovaultiq/Rahman-ticket-admin/main/seller-config.json?t=${Date.now()}`);
       if (response.ok) {
         const data = await response.json();
         if (data.sellerLink) {
@@ -37,7 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
       let events = [];
       
       // Always fetch from GitHub to get latest events (not cached localStorage)
-      const response = await fetch('https://raw.githubusercontent.com/Cryptovaultiq/Rahman-ticket-admin/main/events.json');
+      // Add cache-busting parameter to force fresh data
+      const response = await fetch(`https://raw.githubusercontent.com/Cryptovaultiq/Rahman-ticket-admin/main/events.json?t=${Date.now()}`);
       if (response.ok) {
         const data = await response.json();
         events = data.events;
@@ -82,8 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load events on page load
   loadDynamicEvents();
   
-  // Auto-refresh events every 15 seconds to show admin updates
-  setInterval(loadDynamicEvents, 15000);
+  // Auto-refresh events every 5 seconds to show admin updates faster
+  setInterval(loadDynamicEvents, 5000);
 
   /* ============================================================
      HAMBURGER + MOBILE MENU – NOW WORKING
