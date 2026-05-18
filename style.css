@@ -538,6 +538,7 @@ button {
 .modal-content {
   background: white;
   padding: 2rem;
+  padding-bottom: 5rem;
   border-radius: 12px;
   max-width: 420px;
   width: 90%;
