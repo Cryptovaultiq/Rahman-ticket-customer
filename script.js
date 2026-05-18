@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ============================================================ */
   async function loadSellerConfig() {
     try {
-      const response = await fetch('https://raw.githubusercontent.com/Cryptovaultiq/My-Ticketmaster-admin/main/seller-config.json');
+      const response = await fetch('https://raw.githubusercontent.com/Cryptovaultiq/Rahman-ticket-admin/main/seller-config.json');
       if (response.ok) {
         const data = await response.json();
         if (data.sellerLink) {
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let events = [];
       
       // Always fetch from GitHub to get latest events (not cached localStorage)
-      const response = await fetch('https://raw.githubusercontent.com/Cryptovaultiq/My-Ticketmaster-admin/main/events.json');
+      const response = await fetch('https://raw.githubusercontent.com/Cryptovaultiq/Rahman-ticket-admin/main/events.json');
       if (response.ok) {
         const data = await response.json();
         events = data.events;
