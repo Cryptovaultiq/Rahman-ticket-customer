@@ -544,6 +544,8 @@ button {
   position: relative;
   text-align: center;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .close {
