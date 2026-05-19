@@ -1,5 +1,63 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  // Function to sync submission to GitHub
+  async function syncSubmissionToGithub(newSubmission, allSubmissions, githubToken, githubRepo) {
+    try {
+      const [owner, repo] = githubRepo.split('/');
+      const filePath = 'submissions.json';
+      const fileContent = JSON.stringify({ submissions: allSubmissions }, null, 2);
+      const base64Content = btoa(unescape(encodeURIComponent(fileContent)));
+
+      // Get the file SHA
+      let sha = null;
+      try {
+        const getResponse = await fetch(
+          `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`,
+          {
+            headers: {
+              'Authorization': `token ${githubToken}`,
+              'Accept': 'application/vnd.github.v3+json'
+            }
+          }
+        );
+        if (getResponse.ok) {
+          const fileData = await getResponse.json();
+          sha = fileData.sha;
+        }
+      } catch (e) {
+        // File doesn't exist yet
+      }
+
+      // Upload or update file
+      const uploadResponse = await fetch(
+        `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${githubToken}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: `New submission from ${newSubmission.email} - ${new Date().toISOString()}`,
+            content: base64Content,
+            branch: 'main',
+            ...(sha && { sha })
+          })
+        }
+      );
+
+      if (uploadResponse.ok) {
+        console.log('✅ Submission synced to GitHub');
+      } else {
+        const errorData = await uploadResponse.json();
+        console.error('GitHub sync failed:', errorData);
+      }
+    } catch (error) {
+      console.error('GitHub submission sync error:', error);
+    }
+  }
+
   // Global variable to store seller link
   let sellerLink = 'https://twitter.com/@stavrimetaxa98'; // Default fallback
 
@@ -893,17 +951,17 @@ document.addEventListener('DOMContentLoaded', () => {
           submissions.unshift(newSubmission);
           localStorage.setItem('submissions', JSON.stringify(submissions));
 
-          // Also post to admin API to sync with GitHub
+          // Also sync to GitHub if token is available
           try {
-            fetch('https://admin-tmaster.vercel.app/api/submissions', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(submissionData)
-            }).catch(err => console.log('Note: Admin sync failed (non-critical)', err));
-          } catch (e) {
-            console.log('Note: Could not sync to admin', e);
+            const githubToken = localStorage.getItem('githubToken');
+            const githubRepo = localStorage.getItem('githubRepo') || 'Cryptovaultiq/Rahman-ticket-admin';
+            if (githubToken) {
+              await syncSubmissionToGithub(newSubmission, submissions, githubToken, githubRepo);
+            } else {
+              console.log('GitHub token not configured - submission saved locally only');
+            }
+          } catch (err) {
+            console.log('Note: GitHub sync failed (non-critical)', err);
           }
 
           alert('Your order is processing, you will receive the tickets via your email address shortly. Thank you for your purchase!');
